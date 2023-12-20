@@ -10,12 +10,20 @@
   </head>
   <body>
     <section class="form">
+      <div class="form__title">Trivia</div>
       <form class="form__item" action="">
-        <div>
+        <div class="select__row">
           <p>number of questions:</p>
-          <input id="number" type="number" name="amount" min="1" max="20" />
+          <input
+            value="5"
+            id="number"
+            type="number"
+            name="amount"
+            min="1"
+            max="20"
+          />
         </div>
-        <div>
+        <div class="select__row">
           <p>select category:</p>
           <select id="category" name="category">
             <option value="">Any Category</option>
@@ -45,7 +53,7 @@
             <option value="32">Entertainment: Cartoon Animations</option>
           </select>
         </div>
-        <div>
+        <div class="select__row">
           <p>select difficulty:</p>
           <select id="difficulty" name="difficulty">
             <option value="">Any Difficulty</option>
@@ -54,7 +62,7 @@
             <option value="hard">Hard</option>
           </select>
         </div>
-        <div>
+        <div class="select__row">
           <p>select type:</p>
           <select id="type" name="type">
             <option value="">Any Type</option>
@@ -62,11 +70,35 @@
             <option value="boolean">True / False</option>
           </select>
         </div>
-        <div>
+        <div class="form__btns">
           <button type="reset">clear</button
           ><button type="submit">start quiz</button>
         </div>
       </form>
     </section>
+    <section class="quiz hidden">
+      <div class="quiz__body">
+        <div class="quiz__container"></div>
+        <div class="quiz__bottom">
+          <h2 class="quiz__title">
+            вы ответили на <span id="correct__answers">0</span> из
+            <span id="all__answers">5</span>
+          </h2>
+          <button class="quiz__btn">проверить</button>
+        </div>
+      </div>
+    </section>
+    <template id="template"
+      ><div class="question">
+        <h2 class="question__title">
+          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Veritatis,
+          quae.
+        </h2>
+        <div class="question__answers"></div>
+      </div>
+    </template>
+    <template id="answer"
+      ><div class="question__answer">Lorem, ipsum dolor.</div></template
+    >
   </body>
 </html>
