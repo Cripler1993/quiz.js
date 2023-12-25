@@ -11,6 +11,8 @@ let quizContainer = document.querySelector(".quiz__container");
 let questionTemplate = document.querySelector("#template");
 let answerTemplate = document.querySelector("#answer");
 
+let checkContainer = document.querySelector("#check__container");
+
 // let arr = [
 //   { question: "как вас зовут?", options: ["как", "никак", "абыкак"] },
 //   { question: "кто президент России?", options: ["Путин", "Медведев"] },
@@ -39,9 +41,12 @@ form.addEventListener("submit", function (event) {
 });
 
 // объявляем функцию getQuiz передаем параметры
-// отправляем фетч запрос(запрос данных с сервера) где в ссылке подставляем пармаетры указанные у функции
+// отправляем фетч запрос(запрос данных с сервера) где в ссылке подставляем парметры указанные у функции
 // возвращаем и обрабатываем запрос с сервера
 // получаем результат от сервера
+//  объявляем переменную newArr в которую присваиваем результат выполнения метода map у ответа сервера с ключом results
+//  который меняет каждый элемент массива и возвращает изменный, новый массив
+// вызываем функцию renderQuestions которая принимает в себя параметр newArr
 
 function getQuiz(amount, category, difficulty, type) {
   fetch(
@@ -68,13 +73,20 @@ function getQuiz(amount, category, difficulty, type) {
 // обнуляем внутреннее содержимое документа переменной quizContainer
 // открываем цикл для всех элементов arr
 // в переменную question присваиваем созданный в html шаблон содержащий вопрос и контейнер для вариантов ответа
+// в переменную questionContainer присваиваем элемент элемент с классом question
+
+// к переменной questionContainer добавляем обработчик слушателя событий, открываем функцию которая принимает параметр
+// event и используем функцию handleAnswer которая принимает параметры event, element и arr
+
 // получаем в перменную questiontitle элемент заголовка вопроса из шаблона
 // получаем в перменную questionAnswers контейнер ответов из шаблона
 // содержимому html документа question title присваиваем значение элемента массива с ключом question(вопрос)
 
 // открываем цикл для всех ключей options у элемента массива функкция принимает параметр answerText
 //  в переменную answer присваиваем созданный в html шаблон ответа
-// в перемнную answerContent присваиваем контейнер 1-ого ответа
+// в перемнную answerContent присваиваем контейнер одного ответа
+// если параметр равен ключу элемента selected_answer
+// то добавляем переменной содержащей контейнер одного ответа класс selected
 // внутреннему содержимому html документа answerContent присваиваем один из элементов с ключом option(вариант ответа)
 // к переменной questionAnswers(контейнер для вариантов ответа) добавляем переменную с шаблоном ответа
 // к переменной quizContainer добавялем шаблон содержащий вопрос и контейнер для вариантов ответа
@@ -83,39 +95,45 @@ function renderQuestions(arr) {
   quizContainer.innerHTML = "";
   arr.forEach(function (element) {
     let question = questionTemplate.content.cloneNode(true);
-    let questionContainer = question.querySelector(".question");
-
-    questionContainer.addEventListener("click", function (event) {
-      handleAnswer(event, element, arr);
-    });
 
     let questionTitle = question.querySelector(".question__title");
     let questionAnswers = question.querySelector(".question__answers");
 
     questionTitle.innerHTML = element.question;
 
-    element.options.forEach(function (answerText) {
+    element.options.forEach(function (answerText, index) {
       let answer = answerTemplate.content.cloneNode(true);
       let answerContent = answer.querySelector(".question__answer");
-      if (answerText == element.selected_answer) {
+      if (index == element.selected_answer) {
         answerContent.classList.add("selected");
       }
 
       answerContent.innerHTML = answerText;
-
+      answerContent.addEventListener("click", function (event) {
+        handleAnswer(index, element, arr);
+      });
       questionAnswers.append(answer);
     });
 
     quizContainer.append(question);
   });
 }
-function handleAnswer(event, element, arr) {
-  let option = event.target;
-  if (option.classList.contains("question__answer")) {
-    element.selected_answer = option.innerHTML;
-    renderQuestions(arr);
-    console.log(element);
+
+// объявляем функцию handleAnswer, принимает в себя параметры event, element и arr
+// переменной option присваиваем значение элемента по которому кликнули
+// объявляем условие при котором если переменная option имеет класс question__answer(контейнер одного ответа)
+// то элемент с ключом selected_answer получает значение внутреннего html содержимого переменной options
+// испольщуем функцию renderQuestions c парамаетром arr
+
+function handleAnswer(index, element, arr) {
+  element.selected_answer = index;
+  renderQuestions(arr);
+  let selectedAnswers = document.querySelectorAll(".selected");
+  let selectedCount = selectedAnswers.length;
+  if (selectedCount == arr.length) {
+    checkContainer.classList.remove("hidden");
   }
+  console.log(element);
 }
 
 // selected answer заносить не текст выбранного вопроса, а его индекс в массиве options

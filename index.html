@@ -79,12 +79,15 @@
     <section class="quiz hidden">
       <div class="quiz__body">
         <div class="quiz__container"></div>
-        <div class="quiz__bottom">
+        <div class="quiz__bottom hidden" id="play__container">
           <h2 class="quiz__title">
             вы ответили на <span id="correct__answers">0</span> из
             <span id="all__answers">5</span>
           </h2>
-          <button class="quiz__btn">проверить</button>
+          <button class="quiz__btn">начать заново</button>
+        </div>
+        <div class="quiz__bottom hidden" id="check__container">
+          <button class="quiz__btn" id="check__btn">проверить</button>
         </div>
       </div>
     </section>
