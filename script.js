@@ -12,6 +12,14 @@ let questionTemplate = document.querySelector("#template");
 let answerTemplate = document.querySelector("#answer");
 
 let checkContainer = document.querySelector("#check__container");
+let playContainer = document.querySelector("#play__container");
+let checkBtn = document.querySelector("#check__btn");
+let restartBtn = document.querySelector("#play__btn");
+
+let questionAmount = document.querySelector("#all__answers");
+let correctAmount = document.querySelector("#correct__answers");
+
+let gameEnd = false;
 
 // let arr = [
 //   { question: "как вас зовут?", options: ["как", "никак", "абыкак"] },
@@ -61,11 +69,25 @@ function getQuiz(amount, category, difficulty, type) {
         return {
           question: elem.question,
           correct_answer: elem.correct_answer,
-          options: elem.incorrect_answers.concat([elem.correct_answer]),
+          options: elem.incorrect_answers
+            .concat([elem.correct_answer])
+            .sort(function () {
+              if (Math.random() > 0.5) {
+                return 1;
+              } else {
+                return -1;
+              }
+            }),
           selected_answer: null,
         };
       });
       renderQuestions(newArr);
+      checkBtn.addEventListener("click", function () {
+        gameEnd = true;
+        renderQuestions(newArr);
+        checkContainer.classList.add("hidden");
+        playContainer.classList.remove("hidden");
+      });
     });
 }
 
@@ -92,7 +114,9 @@ function getQuiz(amount, category, difficulty, type) {
 // к переменной quizContainer добавялем шаблон содержащий вопрос и контейнер для вариантов ответа
 
 function renderQuestions(arr) {
+  correctAmount.innerHTML = 0;
   quizContainer.innerHTML = "";
+  questionAmount.innerHTML = arr.length;
   arr.forEach(function (element) {
     let question = questionTemplate.content.cloneNode(true);
 
@@ -100,18 +124,31 @@ function renderQuestions(arr) {
     let questionAnswers = question.querySelector(".question__answers");
 
     questionTitle.innerHTML = element.question;
+    let correctIndex = element.options.indexOf(element.correct_answer);
+    if (element.selected_answer == correctIndex && gameEnd) {
+      correctAmount.innerHTML = +correctAmount.innerHTML + 1;
+    }
 
     element.options.forEach(function (answerText, index) {
       let answer = answerTemplate.content.cloneNode(true);
       let answerContent = answer.querySelector(".question__answer");
-      if (index == element.selected_answer) {
+
+      if (index == element.selected_answer && !gameEnd) {
         answerContent.classList.add("selected");
+      } else if (index == element.selected_answer && gameEnd) {
+        answerContent.classList.add("incorrect");
+      }
+
+      if (index == correctIndex && gameEnd) {
+        answerContent.classList.add("correct");
       }
 
       answerContent.innerHTML = answerText;
-      answerContent.addEventListener("click", function (event) {
-        handleAnswer(index, element, arr);
-      });
+      if (!gameEnd) {
+        answerContent.addEventListener("click", function (event) {
+          handleAnswer(index, element, arr);
+        });
+      }
       questionAnswers.append(answer);
     });
 
@@ -135,5 +172,14 @@ function handleAnswer(index, element, arr) {
   }
   console.log(element);
 }
+
+restartBtn.addEventListener("click", function () {
+  gameEnd = false;
+  formSection.classList.remove("hidden");
+
+  quizSection.classList.add("hidden");
+
+  playContainer.classList.add("hidden");
+});
 
 // selected answer заносить не текст выбранного вопроса, а его индекс в массиве options
