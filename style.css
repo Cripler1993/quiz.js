@@ -133,3 +133,44 @@
 .hidden {
   display: none;
 }
+
+.final__correct {
+  animation: final__correct 10s ease-in-out;
+}
+@keyframes final__correct {
+  0% {
+    transform: scale3d(1.2, 1.2, 1.2);
+  }
+  25% {
+    transform: scale3d(0.9, 0.9, 0.9);
+  }
+  50% {
+    transform: scale3d(1.2, 1.2, 1.2);
+  }
+  75% {
+    transform: scale3d(0.9, 0.9, 0.9);
+  }
+  100% {
+    transform: scale3d(1.2, 1.2, 1.2);
+  }
+}
+.final__incorrect {
+  animation: final__incorrect 10s ease-in-out;
+}
+@keyframes final__incorrect {
+  0% {
+    opacity: 1;
+  }
+  25% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 0.1;
+  }
+  75% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 1;
+  }
+}
